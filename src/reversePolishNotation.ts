@@ -1,15 +1,17 @@
 export class ReversePolishCalculator {
   private numberStack: number[] = [];
 
-  private operatorsStack: string[] = [];
-
   private allowedOperators = ["+", "-", "*", "/"];
+
+  static OPERATION_SEPARATOR = " ";
 
   public evaluate(line: string) {
     try {
       this.validateInput(line);
 
-      line.split(" ").map((el: string) => this.determineElement(el));
+      line
+        .split(ReversePolishCalculator.OPERATION_SEPARATOR)
+        .map((el: string) => this.determineElement(el));
       return this.numberStack[this.numberStack.length - 1];
     } catch (error) {
       return error.message ? error.message : "";
@@ -18,10 +20,8 @@ export class ReversePolishCalculator {
 
   private determineElement(element: string) {
     if (this.allowedOperators.includes(element)) {
-      this.operatorsStack.push(element);
-
       const result: number = this.calculate(
-        this.operatorsStack.pop(),
+        element,
         this.numberStack.pop(),
         this.numberStack.pop()
       );
